@@ -1,0 +1,32 @@
+<ion-content>
+  <form [formGroup]="form" (ngSubmit)="signIn()">
+    <div id="center">
+      <ion-card>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="form-button right">
+                <ion-button (click)="register()" color="primary" fill="clear">
+                  <small>{{'register.register' | translate}}</small>
+                </ion-button>
+              </div> 
+              <ion-list>
+                <ion-item>
+                  <ion-label position="floating">{{'login.singin.label_email' | translate}}</ion-label>
+                  <ion-input [enterkeyhint]="'next'" autocomplete="email" type="text" formControlName="identifier"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">{{'login.label_password' | translate}}</ion-label>
+                  <ion-input (keyup.enter)="form.valid?signIn():null" [enterkeyhint]="'enter'" autocomplete="password" type="password" formControlName="password"></ion-input>
+                </ion-item>
+            </ion-list>
+          </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><ion-button [disabled]="!form.valid" (click)="signIn()">Iniciar sesión</ion-button></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+  </form>
+</ion-content>

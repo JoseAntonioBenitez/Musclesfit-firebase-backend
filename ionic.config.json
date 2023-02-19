@@ -1,0 +1,7 @@
+{
+  "name": "Musclesfit",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

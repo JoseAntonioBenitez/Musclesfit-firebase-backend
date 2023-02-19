@@ -1,0 +1,106 @@
+{
+    "login":{
+        "singin":{
+            "label_email":"Introduce tu email"
+           
+        },
+        "label_password":"Introduce tu constraseña"
+    },
+    "register":{
+        "register":"¿No tienes cuenta, registrate?",
+        "label_name":"Introduce tu nombre.",
+        "label_lastname":"Introduce tus apellidos.",
+        "label_confirm_password":"Repite la constraseña.",
+        "send":"Enviar"
+    },
+    "home":{
+        "btn_workout":"Ejercicíos",
+        "btn_diary":"Diarío",
+        "btn_equipment":"Equipamiento",
+        "btn_category":"Categoría",
+        "btn_aboutme":"Sobre Mí",
+        "btn_logout":"Cerrar Sesion",
+        "title":"Diario Fit",
+        "title_menu":"MusclesFit Menú"
+    },
+    "form":{
+        "etq_name":"Nombre del Equipamiento"
+    },
+    "formGeneral":{
+        "btn_add":"Añadir",
+        "btn_update":"Modificar"
+    },
+    "formEquipment":{
+        "title":"Alta Equipamiento",
+        "placeholderName":"Introduce el nombre del equipamiento",
+        "lblselectabled":"Selecciona una Equipamiento"
+    },
+    "formCategory":{
+        "title":"Alta Categoria",
+        "lblcategory":"Nombre de la Categoria",
+        "placeholderName":"Introduce el nombre de la categoria"
+
+    },
+    "formDiary":{
+        "title":"Alta de Registro",
+        "placeholderReps":"Introduce el numero de reps",
+        "placeholderWeight":"Introduce el peso"
+        
+    },
+    "formWorkout":{
+        "title":"Alta Ejercicio",
+        "placeholderName":"Introduce el nombre del Ejercicio",
+        "lblName":"Nombre"
+        
+    },
+    
+    "general":{
+        "btn_cancel":"Cancelar",
+        "btn_add":"Añadir",
+        "btn_delete":"Borrar",
+        "btn_update":"Modificar",
+        "btn_close":"Cerrar",
+        "btn_guardar":"Guardar",
+        "warning":"¿Estas seguro que quieres borrar el esto?",
+        "exist":"No es posible borrar el elemento, ya que esta asignado a otro"
+    },
+    "aboutme":{
+        "title":"Sobre Mí",
+        "card_content":"Esta aplicacion ha sido desarrollada con el fin de que el usuario pueda llevar un registro de sus avances en el gimnasio y asi poder preparar un plan de entrenamiento en base a tu pogreso.",
+        "card_subtitle":"Alumno de 2º DAM | ADD & HLC | CPIFP Malaga Tech Park",
+        "tip":"¿Cuantas Veces Entrenar un Grupo Muscular?",
+        "one_week":"Una vez en semana",
+        "one_or_twoweek":"Una o Dos veces en semana",
+        "two_or_threeWeek":"Dos o Tres veces en semana",   
+        "contactme":"Contáctame",
+        "hobbies":"My Hobbies",
+        "textHobbie":"Solo soy un chico al que le gusta entrenar y sentir la bomba en mis músculos. Así que paso mucho tiempo aprendiendo sobre los músculos y el entrenamiento, y me di cuenta de que el mayor progreso es cuando cuentas lo que haces." 
+    },
+    "groupMuscular":{
+        "upperbodyfront":"Pecho",
+        "upperbodyback":"Espalda",
+        "lowerbody":"Piernas",
+        "armsbody":"Hombros y Brazos",
+        "corebody":"Core"
+    },
+    "equipment":{
+        "title":"Lista de Equipamiento"
+    },
+    "category":{
+        "title":"Lista de Categorias",
+        "lblselectabled":"Selecciona una Categoria"
+    },
+    "workout":{
+        "title":"Lista de Ejercicios",
+        "lblselectabled":"Selecciona un Ejercicio"
+    },
+    "date":{
+        "lbltime":"Tiempo",
+        "lblselectabled":"Selecciona una fecha"
+    },
+    "diary":{
+        "lblWorkout":"Ejercicio",
+        "lblReps":"Repeticiones",
+        "lblWeight":"Peso"
+    }
+}

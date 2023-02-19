@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title slot="end">{{'formCategory.title' | translate}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="onDismiss()">X</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" (keyup.enter)="onSubmit()">
+      <ion-item>
+        <ion-label position="floating">
+          {{'formCategory.lblcategory' | translate}}
+        </ion-label>
+        <ion-input type="text" placeholder="{{'formCategory.placeholderName' | translate}}" formControlName="nameCategory"></ion-input>
+      </ion-item>
+      <ion-button [disabled]="!form.valid" type="submit">{{mode=="Edit"?['formGeneral.btn_update' | translate]:['formGeneral.btn_add' | translate]}}</ion-button>
+      <ion-img src="../../../../assets/ImagesForm/CategoryForm.png" ></ion-img>
+    </form>
+</ion-content>

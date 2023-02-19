@@ -1,0 +1,19 @@
+<ion-accordion-group [multiple]="true" #accordion>
+  <ion-accordion value="first">
+    <ion-item slot="header" color="light">
+      <ng-container *ngIf="selectedDateTime!=null">
+        <ion-label>{{getTime() | date:'short':undefined:'es-es'}}</ion-label>
+      </ng-container>
+      <ion-label slot="start" *ngIf="!selectedDateTime">{{'date.lblselectabled' | translate}}</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content">
+      <ion-datetime #dateTime locale="es-ES" [value]="getTime()" (ionChange)="onDateTimeChanged($event, accordion)">
+        <span slot="time-label">{{'date.lbltime' | translate}}</span> 
+        <ion-buttons slot="buttons">
+          <ion-button color="danger" (click)="onCancel(dateTime,accordion)">{{'general.btn_cancel' | translate}}</ion-button>
+          <ion-button color="primary" (click)="onConfirm(dateTime)">{{'general.btn_guardar' | translate}}</ion-button>
+        </ion-buttons>
+      </ion-datetime>
+    </div>
+  </ion-accordion>
+</ion-accordion-group>

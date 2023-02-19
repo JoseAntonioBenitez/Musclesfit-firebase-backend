@@ -1,0 +1,29 @@
+<ion-content>
+  <form [formGroup]="form" (ngSubmit)="register()">
+    <ion-list>
+      <ion-item>
+        <ion-label>{{'register.label_name' | translate}}</ion-label>
+        <ion-input autocomplete="" placeHolder="Name" type="text" formControlName="first_name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{'register.label_lastname' | translate}}</ion-label>
+        <ion-input autocomplete="" placeHolder="Last Name" type="text" formControlName="last_name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{'login.singin.label_email' | translate}}</ion-label>
+        <ion-input autocomplete="email" placeHolder="usuario@dominio" type="text" formControlName="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{'login.label_password' | translate}}</ion-label>
+        <ion-input autocomplete="" placeHolder="Password" type="password" formControlName="password"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{'register.label_confirm_password' | translate}}</ion-label>
+        <ion-input autocomplete="" placeHolder="Password" type="password" formControlName="confirm_password"></ion-input>
+      </ion-item>
+    </ion-list>
+    <div class="form-button right">
+      <ion-button [disabled]="!form.valid" (click)="register()">{{'register.send' | translate}}</ion-button>
+    </div>
+  </form>
+</ion-content>

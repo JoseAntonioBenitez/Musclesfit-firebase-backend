@@ -1,0 +1,61 @@
+<!--
+<ion-header [translucent]="true"></ion-header>
+
+<ion-content [fullscreen]="true">
+  
+  <div id="container">
+      <ion-img src="../assets/LogoTrident.png" alt="MusclesFit's logo Trident"></ion-img>
+      <ion-button [routerLink]="['../exercises']">{{'home.btn_workout' | translate}}</ion-button>
+      <ion-button [routerLink]="['../dailyworkout']">{{'home.btn_diary' | translate}}</ion-button>
+      <ion-button [routerLink]="['../equipment']">{{'home.btn_equipment' | translate}}</ion-button>
+      <ion-button [routerLink]="['../dailyworkout']">{{'home.btn_category' | translate}}</ion-button>
+      <ion-button [routerLink]="['../dailyworkout']">{{'home.btn_aboutme' | translate}}</ion-button>
+  </div>
+  
+</ion-content>
+-->
+<ion-menu contentId="main-content" [type]="screenType()=='BIG'?'push':'overlay'" >
+  <ion-header>
+    <ion-toolbar>
+        <ion-title>{{'home.title_menu' | translate}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-img src="../assets/LogoTrident.png" alt="MusclesFit's logo Trident"></ion-img>
+    <ion-grid>
+      <ion-row>
+        <ion-col><ion-button [routerLink]="['../exercises']">{{'home.btn_workout' | translate}}</ion-button></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col><ion-button [routerLink]="['../equipment']">{{'home.btn_equipment' | translate}}</ion-button></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col><ion-button [routerLink]="['../category']">{{'home.btn_category' | translate}}</ion-button></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col><ion-button [routerLink]="['../aboutme']">{{'home.btn_aboutme' | translate}}</ion-button></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col><ion-button (click)="signOut()">{{'home.btn_logout' | translate}}</ion-button></ion-col>
+      </ion-row>
+    </ion-grid>
+    
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>{{'home.title' | translate}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+      <app-diary *ngFor="let diary of (getDiaryList() | async)" [diary]="diary" (onUpdate)="onUpdateDiaryList($event)" (onDelete)="onDeleteDiaryList($event)"></app-diary>
+      <ion-fab vertical="bottom" horizontal="end"  slot="fixed" >
+        <ion-fab-button color="tertiary"(click)="onAddDiaryList()"><ion-icon style="zoom:2" name="add-outline"></ion-icon></ion-fab-button>
+      </ion-fab>
+  </ion-content>
+</div>
