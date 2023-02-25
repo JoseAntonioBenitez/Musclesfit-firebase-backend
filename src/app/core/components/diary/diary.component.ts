@@ -40,7 +40,7 @@ export class DiaryComponent implements OnInit {
   getCategoryById(id:number | undefined){
     if(id!=null){
       var idCategoria = this.workoutSVC.getWorkoutById(id)?.id_category;
-      return this.categorySVC.getCategoryById(idCategoria!)?.nameCategory;
+      //return this.categorySVC.getCategoryById(idCategoria!)?.nameCategory;
     }
     return{}
     

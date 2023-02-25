@@ -101,5 +101,9 @@
         "lblWorkout":"Workout",
         "lblReps":"Reps",
         "lblWeight":"Weight"
+    },
+    "change-picture":{
+        "title":"Change Picture"
     }
+    
 }

@@ -30,11 +30,12 @@ export class ExerciseComponent implements OnInit {
 
   }
 
+  /*
   getCategoryById(id:number| undefined){
     if(id!=null)
-      return this.categorySVC.getCategoryById(id)?.nameCategory
+      //return this.categorySVC.getCategoryById(id)?.nameCategory
     return {};
-  }
+  }*/
 
   onUpdateClick(){
     this.onUpdate.emit(this.workout);

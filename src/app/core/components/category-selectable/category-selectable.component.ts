@@ -26,11 +26,14 @@ export class CategorySelectableComponent implements OnInit, ControlValueAccessor
   constructor(
     private categorySVC: CategoryWorkoutSVCService
   ) { }
-
-
   writeValue(obj: any): void {
-    this.selectedCategory = this.categorySVC?.getCategoryById(obj);
+    throw new Error('Method not implemented.');
   }
+
+
+  /*writeValue(obj: any): void {
+    this.selectedCategory = this.categorySVC?.getCategoryById(obj);
+  }*/
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }

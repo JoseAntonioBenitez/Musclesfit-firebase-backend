@@ -1,63 +1,89 @@
 import { Injectable } from '@angular/core';
+import { DocumentData } from '@firebase/firestore';
 import { BehaviorSubject } from 'rxjs';
 import { CategoryWorkout } from '../model/categoryWorkout';
+import { FileUploaded, FirebaseService } from './firebase/firebase-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryWorkoutSVCService {
-  private _category:CategoryWorkout[] = [ 
-    {
-      id:1,
-      nameCategory:"Chest",
-      image:"/assets/category/IconChest.jpg"
-    },
-    {
-      id:2,
-      nameCategory:"Back",
-      image:"/assets/category/IconBack.jpg"
-    },
-    {
-      id:3,
-      nameCategory:"Arms",
-      image:"/assets/category/IconArm.jpg"
-    },
-    {
-      id:4,
-      nameCategory:"Legs",
-      image:"/assets/category/IconLegDay.jpg"
-    },
-    {
-      id:5,
-      nameCategory:"Shoulder",
-      image:"/assets/category/IconShoulder.jpg"
-    },
-  ]
-  private categorySubjetc:BehaviorSubject<CategoryWorkout[]> = new BehaviorSubject(this._category);
-  public category$ = this.categorySubjetc.asObservable();
+  private _categorySubjetc:BehaviorSubject<CategoryWorkout[]> = new BehaviorSubject([]);
+  public category$ = this._categorySubjetc.asObservable();
 
-  id:number = (this._category.length)+1;
+  unsubscr;
+  constructor(
+    private firebase:FirebaseService
+  ) { this.unsubscr = this.firebase.subscribeToCollection('category',this._categorySubjetc,this.mapCategory)}
 
-  constructor() { }
-
-  getCategoryById(id:number){
-    return this._category.find(_category => _category.id == id);
+  private mapCategory(doc:DocumentData){
+    return{
+      id:0,
+      docId:doc['id'],
+      nameCategory:doc['data']().nameCategory,
+      image:doc['data']().image
+    };
   }
 
-  deleteCategorytById(id:number){
-    this._category = this._category.filter(c=>c.id != id); 
-    this.categorySubjetc.next(this._category); 
+  getCategoryById(id:string):Promise<CategoryWorkout>{
+    return new Promise<CategoryWorkout>(async (resolve,reject) => {
+      try{
+        var category = (await this.firebase.getDocument('category',id));
+        resolve({
+          id:0,
+          docId:category.id,
+          nameCategory:category.data['nameCategory'],
+          image:category.data['image']
+
+        });
+      }catch(error){
+        reject(error);
+      }
+    });
   }
 
-  addCategory(category:CategoryWorkout){
-    category.id = this.id++
-    this._category.push(category)
+  uploadImage(file):Promise<any>{  
+    return new Promise(async (resolve, reject)=>{
+      try {
+        const data = await this.firebase.imageUpload(file);  
+        resolve(data);
+      } catch (error) {
+        resolve(error);
+      }
+    });
   }
 
-  updateCategory(categoryItem:CategoryWorkout){
-    var _category = this._category.find(category=>category.id == categoryItem.id)
-    if (_category){
-      _category.nameCategory = categoryItem.nameCategory;
+  async deleteCategorytById(category:CategoryWorkout){
+    await this.firebase.deleteDocument('category',category.docId)
+  }
+
+  async addCategory(category:CategoryWorkout){
+    var _category = {
+      id:0,
+      docId:category.docId,
+      nameCategory:category.nameCategory
+    };
+    if(category['pictureFile']){
+      var response:FileUploaded = await this.uploadImage(category['pictureFile']);
+      _category['image'] = response.file;
+    }
+    try {
+      await this.firebase.createDocument('category',_category);
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  async updateCategory(category:CategoryWorkout){
+    var _category = {
+      id:0,
+      docId:category.docId,
+      nameCategory:category.nameCategory
+    };
+    try {
+      await this.firebase.updateDocument('category',category.docId, _category);
+    }catch(error){
+      console.log(error);
     }
   }
 

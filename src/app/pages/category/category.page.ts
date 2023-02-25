@@ -74,7 +74,7 @@ async onDeleteAlert(category:any){
         text: await lastValueFrom(this.translate.get('general.btn_delete')),
         role: 'confirm',
         handler: () => {
-            this.categorySVC.deleteCategorytById(category.id);
+            this.categorySVC.deleteCategorytById(category);
           
         },
       },
@@ -106,7 +106,7 @@ async onCategoryExistsAlert(category:any){
 }
 
 onDeleteCategory(category:any){
-  if(!this.workoutSVC.getWorkoutByCategory(category.id)){
+  if(!this.workoutSVC.getWorkoutByCategory(category.docId)){
     this.onDeleteAlert(category);
   }else{
     this.onCategoryExistsAlert(category);

@@ -102,5 +102,8 @@
         "lblWorkout":"Ejercicio",
         "lblReps":"Repeticiones",
         "lblWeight":"Peso"
+    },
+    "change-picture":{
+        "title":"Cambiar Imagen"
     }
 }

@@ -69,7 +69,6 @@ export class EquipamentSVCService {
   }
 
   async addEquipment(equipment:Equipment){
-    console.log(equipment)
     var _equipment = {
       id:0,
       docId:equipment.docId,
@@ -86,18 +85,13 @@ export class EquipamentSVCService {
     }
   }
 
-
-
-  
   async updateEquipment(equipmentItem:Equipment){
-    console.log(equipmentItem.docId)
     var _equipment = {
       id:0,
       docId:equipmentItem.docId,
       name_equipment:equipmentItem.name_equipment,
     };
     try {
-      console.log(equipmentItem)
       await this.firebase.updateDocument('equipment', equipmentItem.docId, _equipment);  
     } catch (error) {
       console.log(error);
