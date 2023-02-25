@@ -19,7 +19,7 @@ export const USER_PROFILE_VALUE_ACCESSOR: any = {
 })
 export class EquipmentSelectableComponent implements OnInit, ControlValueAccessor {
 
-  selectedEquipment:Equipment | undefined = {id:0,name_equipment:"", image:""};
+  selectedEquipment:Equipment = null;
   propagateChange = (_: any) => { }
   isDisabled:boolean = false;
 
@@ -28,8 +28,8 @@ export class EquipmentSelectableComponent implements OnInit, ControlValueAccesso
   ) { }
 
 
-  writeValue(obj: any): void {
-    this.selectedEquipment = this.equipmentSVC?.getEquipmentById(obj);
+  async writeValue(obj: any){
+    this.selectedEquipment = await this.equipmentSVC?.getEquipmentById(obj);
   }
   registerOnChange(fn: any): void {
     this.propagateChange = fn;

@@ -9,12 +9,20 @@ import { Equipment } from '../../model/equipment';
 export class EquipmentItemComponent implements OnInit {
   @Output() onUpdate = new EventEmitter;
   @Output() onDelete = new EventEmitter;
-  @Input() equipment!:Equipment;
+  private _equipment:Equipment;
+  @Input('equipment') set equipment(eq){
+    this._equipment = eq;
+  }
+
+  public get equipment(){
+    return this._equipment;
+  }
   constructor() { }
 
   ngOnInit() {}
   
   onUpdateClick(){
+    console.log(this.equipment.docId)
     this.onUpdate.emit(this.equipment);
   }
 

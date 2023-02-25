@@ -11,14 +11,12 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createTranslateLoader } from 'src/app/core/utils/translate';
 import { HttpClient } from '@angular/common/http';
 import { CoreModule } from 'src/app/core/core.module';
+import { Camera } from '@awesome-cordova-plugins/camera/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 @NgModule({
   imports: [
     CoreModule,
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    EquipmentPageRoutingModule,
     TranslateModule.forChild({
       loader:{ 
         provide:TranslateLoader,
@@ -26,7 +24,11 @@ import { CoreModule } from 'src/app/core/core.module';
         deps:[HttpClient]  
       }
     }),
+    EquipmentPageRoutingModule,
   ],
-  declarations: [EquipmentPage]
+  declarations: [EquipmentPage],
+  providers:[
+    Camera,
+    File]
 })
 export class EquipmentPageModule {}

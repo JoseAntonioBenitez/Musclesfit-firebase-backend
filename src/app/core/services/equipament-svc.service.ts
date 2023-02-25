@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { DocumentData } from 'firebase/firestore';
 import { BehaviorSubject } from 'rxjs';
 import { Equipment } from '../model/equipment';
-import { FirebaseService } from './firebase/firebase-service';
+import { FileUploaded, FirebaseService } from './firebase/firebase-service';
+import { UserService } from './user.service';
 
 
 
@@ -10,128 +11,96 @@ import { FirebaseService } from './firebase/firebase-service';
   providedIn: 'root'
 })
 export class EquipamentSVCService {
-  private _equipment:Equipment[] = [ 
-    {
-      id:1,
-      name_equipment:"Barbell",
-      image:"/assets/equipment/Barbell.png"
-    },
-    {
-      id:8,
-      name_equipment:"Bench",
-      image:"/assets/equipment/Bench.webp"
-    },
-    {
-      id:3,
-      name_equipment:"Dumbbell",
-      image:"/assets/equipment/Dumbell.jpg"
-    },
-    {
-      id:4,
-      name_equipment:"Gym mat",
-      image:"/assets/equipment/Gym_mat.jpg"
-    },
-    {
-      id:9,
-      name_equipment:"Incline bench",
-      image:"/assets/equipment/Incline_bench.jpg"
-    },
-    {
-      id:10,
-      name_equipment:"Kettlebell",
-      image:"/assets/equipment/Kettlebell.webp"
-    },
-    {
-      id:7,
-      name_equipment:"none (bodyweight exercise)",
-      image:"/assets/equipment/none_(bodyweight_exercise).webp"
-    },
-    {
-      id:6,
-      name_equipment:"Pull-up bar",
-      image:"/assets/equipment/Pull-up_bar.jpg"
-    },
-    {
-      id:5,
-      name_equipment:"Swiss Ball",
-      image:"/assets/equipment/Swiss_Ball.jpg"
-    },
-    {
-      id:2,
-      name_equipment:"SZ-Bar",
-      image:"/assets/equipment/SZ-Bar.jpg"
-    },
-    {
-      id: 11,
-      name_equipment:"Pulley Ropes",
-      image:"/assets/equipment/Pulley_Row.jpg"
-    },
-    {
-      id: 12,
-      name_equipment:"Lat Pull Bar",
-      image:"/assets/equipment/Lat-Pull-Bar.webp"
-    },
-    {
-      id: 13,
-      name_equipment:"Rack",
-      image:"/assets/equipment/Rack.jpg"
-    },
-    {
-      id: 14,
-      name_equipment:"Hack Squat",
-      image:"/assets/equipment/hack-squat.jpg"
-    },
-    {
-      id: 15,
-      name_equipment:"Femoral Machine",
-      image:"/assets/equipment/Femoral-Machine.jpg"
-    }
-  ]
-  private equipmentSubjetc:BehaviorSubject<Equipment[]> = new BehaviorSubject(this._equipment);
-  public equipment$ = this.equipmentSubjetc.asObservable();
+  private _equipmentSubjetc:BehaviorSubject<Equipment[]> = new BehaviorSubject([]);
+  public equipment$ = this._equipmentSubjetc.asObservable();
 
-  id:number = (this._equipment.length)+1;
-
-
-  dbCharger;
+  unsubscr;
   constructor(
     private firebase:FirebaseService
   ) {
-    this.dbCharger = this.firebase.subscribeToCollection('equipments',this.equipmentSubjetc,this.mapEquipment)
+    this.unsubscr = this.firebase.subscribeToCollection('equipment',this._equipmentSubjetc,this.mapEquipment)
    }
 
   ngOnDestroy(): void {
-    this.dbCharger();
+    this.unsubscr();
   }
 
   private mapEquipment(doc:DocumentData){
     return{
       id:0,
       docId:doc['id'],
-      name:doc['data']().name,
-      durationInSecs:doc['data']().durationInSecs,
-      picture:doc['data']().picture
+      name_equipment:doc['data']().name_equipment,
+      image:doc['data']().image
     };
   }
 
-  getEquipmentById(id:number){
-      return this._equipment.find(equipment => equipment.id == id);
+  getEquipmentById(id:string):Promise<Equipment>{
+      return new Promise<Equipment>(async (resolve, reject) => {
+
+        try{
+          var equipment = (await this.firebase.getDocument('equipment',id));
+          resolve({
+            id:0,
+            docId:equipment.id,
+            name_equipment:equipment.data['name_equipment'],
+            image:equipment.data['image']
+
+          });
+        }catch(error){
+          reject(error);
+        }
+        
+      });
   }
 
-  deleteEquipmentById(id:number){
-    this._equipment = this._equipment.filter(p=>p.id != id); 
-    this.equipmentSubjetc.next(this._equipment); 
+  async deleteEquipment(equipament:Equipment){
+    await this.firebase.deleteDocument('equipment',equipament.docId);
   }
 
-  addEquipment(equipment:Equipment){
-    equipment.id = this.id++
-    this._equipment.push(equipment)
+  uploadImage(file):Promise<any>{  
+    return new Promise(async (resolve, reject)=>{
+      try {
+        const data = await this.firebase.imageUpload(file);  
+        resolve(data);
+      } catch (error) {
+        resolve(error);
+      }
+    });
   }
 
-  updateEquipment(equipmentItem:Equipment){
-    var _equipment = this._equipment.find(equipment=>equipment.id == equipmentItem.id)
-    if (_equipment){
-      _equipment.name_equipment = equipmentItem.name_equipment;
+  async addEquipment(equipment:Equipment){
+    console.log(equipment)
+    var _equipment = {
+      id:0,
+      docId:equipment.docId,
+      name_equipment:equipment.name_equipment
+    };
+    if(equipment['pictureFile']){
+      var response:FileUploaded = await this.uploadImage(equipment['pictureFile']);
+      _equipment['image'] = response.file;
+    }
+    try {
+      await this.firebase.createDocument('equipment',_equipment);
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+
+
+  
+  async updateEquipment(equipmentItem:Equipment){
+    console.log(equipmentItem.docId)
+    var _equipment = {
+      id:0,
+      docId:equipmentItem.docId,
+      name_equipment:equipmentItem.name_equipment,
+    };
+    try {
+      console.log(equipmentItem)
+      await this.firebase.updateDocument('equipment', equipmentItem.docId, _equipment);  
+    } catch (error) {
+      console.log(error);
     }
   }
 }

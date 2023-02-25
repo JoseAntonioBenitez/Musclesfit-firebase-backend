@@ -39,6 +39,12 @@ export class UserService {
     
   }
 
+
+  //me deveulve el usuario autorizado.
+  public getAuthUser(){
+    
+    console.log(this._isLogged.getValue);
+  }
   private navigateToHome() {
     try {
       this.router.navigate(['home']);

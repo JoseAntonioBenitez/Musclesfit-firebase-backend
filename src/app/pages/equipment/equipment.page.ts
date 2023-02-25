@@ -42,9 +42,11 @@ export class EquipmentPage implements OnInit {
         if(result && result.data){
           switch(result.data.mode){
             case 'New':
+              
               this.equipmentSVC.addEquipment(result.data.equipament);
               break;
             case 'Edit':
+              console.log((result.data as Equipment).docId)
               this.equipmentSVC.updateEquipment(result.data.equipament);
               break;
             default:
@@ -57,6 +59,7 @@ export class EquipmentPage implements OnInit {
     this.equipmentForm(null);
   }
   onUpdateEquipment(equipment:Equipment){
+    console.log("page:" + equipment.docId)
     this.equipmentForm(equipment);
   } 
   
@@ -75,7 +78,7 @@ export class EquipmentPage implements OnInit {
           text: await lastValueFrom(this.translate.get('general.btn_delete')),
           role: 'confirm',
           handler: () => {
-              this.equipmentSVC.deleteEquipmentById(equipment.id);
+              this.equipmentSVC.deleteEquipment(equipment);
             
           },
         },

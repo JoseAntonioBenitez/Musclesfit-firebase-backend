@@ -11,6 +11,11 @@ import { createTranslateLoader } from './core/utils/translate';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FirebaseService } from './core/services/firebase/firebase-service';
 import { FirebaseWebService } from './core/services/firebase/web/firebase-web.service';
+import { Camera } from '@awesome-cordova-plugins/camera/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { CoreModule } from 'src/app/core/core.module';
+
+
 
 export function firebaseServiceFactory() {
   return  new FirebaseWebService();
@@ -18,7 +23,10 @@ export function firebaseServiceFactory() {
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,
+  imports: [
+    BrowserModule, 
+    CoreModule,
+    IonicModule.forRoot(), AppRoutingModule, HttpClientModule,
     TranslateModule.forRoot({
       loader:{ 
         provide:TranslateLoader,

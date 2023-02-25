@@ -19,6 +19,8 @@ import { DiaryComponent } from './components/diary/diary.component';
 import { DiaryFormComponent } from './components/diary-form/diary-form.component';
 import es  from '@angular/common/locales/es';
 import en  from '@angular/common/locales/en';
+import { Camera } from '@awesome-cordova-plugins/camera/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 registerLocaleData(en);
 registerLocaleData(es);
@@ -43,7 +45,9 @@ registerLocaleData(es);
     {
       provide: LOCALE_ID,
      useValue: 'es'
-    }
+    },
+    Camera,
+    File
   ],
   exports:
   [
@@ -63,7 +67,7 @@ registerLocaleData(es);
     DateSelectableComponent,
     ExerciseSelectableComponent,
     DiaryComponent,
-    DiaryFormComponent,
+    DiaryFormComponent
   ],
   declarations:[
     ExerciseComponent,

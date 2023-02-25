@@ -23,9 +23,9 @@ export class ExerciseComponent implements OnInit {
     
   }
 
-  getEquipmentById(id:number|undefined){
+  async getEquipmentById(id:string|undefined){
     if(id!=null)
-      return this.equipmentSVC.getEquipmentById(id)?.name_equipment
+      return (await this.equipmentSVC.getEquipmentById(id))?.name_equipment
     return {};
 
   }
