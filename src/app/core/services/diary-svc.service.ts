@@ -10,13 +10,6 @@ export class DiarySvcService {
   private moment:any = moment;
   private _diaryList: diaryWorkout[] = [
 
-    {
-      id:1,
-      idWorkout:1,
-      dateWorkout:this.moment().toISOString(),
-      weight:80,
-      reps:8
-    }
   ];
 
   private diarySubject:BehaviorSubject<diaryWorkout[]> = new BehaviorSubject(this._diaryList);

@@ -29,7 +29,12 @@ export class EquipmentSelectableComponent implements OnInit, ControlValueAccesso
 
 
   async writeValue(obj: any){
-    this.selectedEquipment = await this.equipmentSVC?.getEquipmentById(obj);
+    try{
+      this.selectedEquipment = await this.equipmentSVC?.getEquipmentById(obj);
+    }catch(error){
+      console.log("No se ha podido recupera los datos: "+error);
+    }
+    
   }
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
@@ -51,6 +56,6 @@ export class EquipmentSelectableComponent implements OnInit, ControlValueAccesso
     
     this.selectedEquipment = equipament;
     accordion.value='';
-    this.propagateChange(this.selectedEquipment.id);
+    this.propagateChange(this.selectedEquipment.docId);
   }
 }

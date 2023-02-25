@@ -91,6 +91,10 @@ export class EquipamentSVCService {
       docId:equipmentItem.docId,
       name_equipment:equipmentItem.name_equipment,
     };
+    if(equipmentItem['pictureFile']){
+      var response:FileUploaded = await this.uploadImage(equipmentItem['pictureFile']);
+      _equipment['image'] = response.file;
+    }
     try {
       await this.firebase.updateDocument('equipment', equipmentItem.docId, _equipment);  
     } catch (error) {

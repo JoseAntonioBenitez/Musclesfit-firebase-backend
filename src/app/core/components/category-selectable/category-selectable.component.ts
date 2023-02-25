@@ -19,25 +19,26 @@ export const USER_PROFILE_VALUE_ACCESSOR: any = {
 })
 export class CategorySelectableComponent implements OnInit, ControlValueAccessor {
 
-  selectedCategory:CategoryWorkout | undefined = {id:0,nameCategory:"", image:""};
+  selectedCategory:CategoryWorkout = null;
   propagateChange = (_: any) => { }
   isDisabled:boolean = false;
 
   constructor(
     private categorySVC: CategoryWorkoutSVCService
   ) { }
-  writeValue(obj: any): void {
-    throw new Error('Method not implemented.');
+
+  async writeValue(obj: any) {
+    try{
+      this.selectedCategory = await this.categorySVC?.getCategoryById(obj);
+    }catch (error) {
+      console.log("No se ha podido recupera los datos: "+error);
+    }
+    
   }
-
-
-  /*writeValue(obj: any): void {
-    this.selectedCategory = this.categorySVC?.getCategoryById(obj);
-  }*/
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (selectedCategory: CategoryWorkout) => void): void {
     this.propagateChange = fn;
   }
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
   }
 
   setDisabledState?(isDisabled: boolean): void {
@@ -54,6 +55,6 @@ export class CategorySelectableComponent implements OnInit, ControlValueAccessor
     
     this.selectedCategory = category;
     accordion.value='';
-    this.propagateChange(this.selectedCategory.id);
+    this.propagateChange(this.selectedCategory.docId);
   }
 }

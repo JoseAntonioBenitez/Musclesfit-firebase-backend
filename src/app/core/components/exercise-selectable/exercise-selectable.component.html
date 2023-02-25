@@ -12,7 +12,7 @@
     </ion-item>
     <div class="ion-padding" slot="content">
       <ion-list>
-        <ion-item *ngFor="let workout of (getWorkout() | async)" button detail  (click)="onEquipmentClicked(workout, accordion)">
+        <ion-item *ngFor="let workout of (getWorkout() | async)" button detail  (click)="onWorkoutClicked(workout, accordion)">
           <ion-avatar class="workout">
             <ion-img *ngIf="!workout.image" alt="Silhouette of a Workout" src="https://ionicframework.com/docs/ion-img/demos/avatar.svg" ></ion-img>
             <ion-img *ngIf="workout.image" alt="Workout picture" [src]="workout.image"></ion-img>

@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
+import { DocumentData } from '@firebase/firestore';
 import { BehaviorSubject } from 'rxjs';
+import { CategoryWorkout } from '../model/categoryWorkout';
+import { Equipment } from '../model/equipment';
 import { Workout } from '../model/workout';
+import { FileUploaded, FirebaseService } from './firebase/firebase-service';
 
 
 @Injectable({
@@ -8,133 +12,135 @@ import { Workout } from '../model/workout';
 })
 export class WorkoutSVCService {
 
-  private _workout : Workout[] = [
+  
+  private _workoutSubjetc:BehaviorSubject<Workout[]> = new BehaviorSubject([]);
+  public workout$ = this._workoutSubjetc.asObservable();
 
-    //Chest Workout
-    {
-      id:1,
-      name:"Bench Press",
-      id_category:1,
-      id_equipment:8,
-      image:"/assets/workout/bench-press.jpg"
-    },
-    {
-      id:2,
-      name:"Incline Bench Press",
-      id_category:1,
-      id_equipment:9,
-      image:"/assets/workout/incline-bench-press.jpg"
-    },
-    {
-      id:3,
-      name:"Dips",
-      id_category:1,
-      id_equipment:7,
-      image:"/assets/workout/dips.jpg"
-    },
-    //Shoulder Workout
-    {
-      id:5,
-      name:"Military Over Head Press",
-      id_category:3,
-      id_equipment:1,
-      image:"/assets/workout/shoulder-press.jpg"
-    },
-    {
-      id:6,
-      name:"Side Lateral Raise",
-      id_category:3,
-      id_equipment:3,
-      image:"/assets/workout/dumbbell-lateral-raise.jpg"
-    },
-    {
-      id:7,
-      name:"Cable Face Pulls",
-      id_category:3,
-      id_equipment:11,
-      image:"/assets/workout/face-pull.jpg"
-    },
-    //Back Exercises
-    {
-      id:8,
-      name:"Pull Ups",
-      id_category:2,
-      id_equipment:6,
-      image:"/assets/workout/pull-ups.jpg"
-    },
-    {
-      id:9,
-      name:"Lat Pull",
-      id_category:2,
-      id_equipment:12,
-      image:"/assets/workout/lat-pulldown.jpg"
-    },
-    //Legs Exercises
-    {
-      id:12,
-      name:"Squat",
-      id_category:4,
-      id_equipment:13,
-      image:"/assets/workout/squat.jpg"
-    },
-    {
-      id:13,
-      name:"Hack Press",
-      id_category:4,
-      id_equipment:14,
-      image:"/assets/workout/hack-squat.jpg"
-    },
-    {
-      id:14,
-      name:"Lying Femoral Curl",
-      id_category:4,
-      id_equipment:15,
-      image:"/assets/workout/lying-leg-curl.jpg"
-    },
-    {
-      id:15,
-      name:"Seated Leg Curl",
-      id_category:4,
-      id_equipment:15,
-      image:"/assets/workout/seated-leg-curl.jpg"
+  unsubscr;
+  constructor(
+    private firebase:FirebaseService
+  ) {
+      this.unsubscr = this.firebase.subscribeToCollection('workout',this._workoutSubjetc, this.mapWorkout)
     }
-  ];
 
-  private workoutSubjetc:BehaviorSubject<Workout[]> = new BehaviorSubject(this._workout);
-  public workout$ = this.workoutSubjetc.asObservable();
-
-  id:number = (this._workout.length)+1;
-  constructor() { }
-
-  getWorkoutByCategory(id:number){ //Filter by Category
-    return this._workout.find(w => w.id_category == id);
+  private mapWorkout(doc:DocumentData){
+    return{
+      id:0,
+      docId:doc['id'],
+      name:doc['data']().name,
+      id_equipment:doc['data']().id_equipment,
+      id_category:doc['data']().id_category,
+      image:doc['data']().image
+    };
   }
 
-  getWorkoutById(id:number){
-    return this._workout.find(w => w.id == id);
+  getWorkoutByCategory(id:string){ //Filter by Category
+    return new Promise<CategoryWorkout>(async (resolve,reject) => {
+      try{
+        var category = (await this.firebase.getDocument('category',id));
+        resolve({
+          id:0,
+          docId:category.id,
+          nameCategory:category.data['nameCategory'],
+          image:category.data['image']
+
+        });
+      }catch(error){
+        reject(error);
+      }
+    });
   }
 
-  getWorkoutByEquipment(id:number){
-    return this._workout.find(w => w.id_equipment == id);
+  getWorkoutById(id:string){
+    return new Promise<Workout>(async (resolve,reject) => {
+      try{
+        var workout = (await this.firebase.getDocument('workout',id));
+        resolve({
+          id:0,
+          docId:workout.id,
+          name:workout.data['nameCategory'],
+          id_equipment:workout.data['id_equipment'],
+          id_category:workout.data['id_category'],
+          image:workout.data['image']
+
+        });
+      }catch(error){
+        reject(error);
+      }
+    });
   }
 
-  deleteWorkoutById(id:number){
-    this._workout = this._workout.filter(w=>w.id != id); 
-    this.workoutSubjetc.next(this._workout); 
+  getWorkoutByEquipment(id:string){
+    return new Promise<Equipment>(async (resolve, reject) => {
+
+      try{
+        var equipment = (await this.firebase.getDocument('equipment',id));
+        resolve({
+          id:0,
+          docId:equipment.id,
+          name_equipment:equipment.data['name_equipment'],
+          image:equipment.data['image']
+
+        });
+      }catch(error){
+        reject(error);
+      }
+      
+    });
   }
 
-  addWorkout(exercise:Workout){
-    exercise.id = this.id++
-    this._workout.push(exercise);
+  async deleteWorkout(workout:Workout){
+    await this.firebase.deleteDocument('workout',workout.docId);
   }
 
-  updateWorkout(exerciseItem:Workout){
-    var _exercise = this._workout.find(exercise=>exercise.id == exerciseItem.id);
-    if (_exercise){
-      _exercise.name = exerciseItem.name
-      _exercise.id_category = exerciseItem.id_category
-      _exercise.id_equipment = exerciseItem.id_equipment
-      _exercise.image = exerciseItem.image
+  uploadImage(file):Promise<any>{  
+    return new Promise(async (resolve, reject)=>{
+      try {
+        const data = await this.firebase.imageUpload(file);  
+        resolve(data);
+      } catch (error) {
+        resolve(error);
+      }
+    });
+  }
+
+  async addWorkout(workout:Workout){
+    console.log("workout id equipment:"+workout.id_equipment);
+    console.log("workout id category:"+workout.id_category);
+    var _workout = {
+      id:0,
+      docId:workout.docId,
+      name:workout.name,
+      id_equipment:workout.id_equipment,
+      id_category:workout.id_category
+    };
+    if(workout['pictureFile']){
+      var response:FileUploaded = await this.uploadImage(workout['pictureFile']);
+      _workout['image'] = response.file;
+    }
+    try {
+      await this.firebase.createDocument('workout',_workout);
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  async updateWorkout(workout:Workout){
+    var _workout = {
+      id:0,
+      docId:workout.docId,
+      name:workout.name,
+      id_equipment:workout.id_equipment,
+      id_category:workout.id_category
+    };
+    if(workout['pictureFile']){
+      var response:FileUploaded = await this.uploadImage(workout['pictureFile']);
+      _workout['image'] = response.file;
+    }
+    try {
+      await this.firebase.updateDocument('workout',workout.docId, _workout);
+    }catch(error){
+      console.log(error)
     }
   }
 }

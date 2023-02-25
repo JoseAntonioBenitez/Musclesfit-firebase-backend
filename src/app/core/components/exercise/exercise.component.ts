@@ -20,22 +20,22 @@ export class ExerciseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+    console.log(this.workout);
   }
 
   async getEquipmentById(id:string|undefined){
     if(id!=null)
-      return (await this.equipmentSVC.getEquipmentById(id))?.name_equipment
+      return (await this.equipmentSVC.getEquipmentById(id));
     return {};
 
   }
 
-  /*
-  getCategoryById(id:number| undefined){
+  
+  async getCategoryById(id:string| undefined){
     if(id!=null)
-      //return this.categorySVC.getCategoryById(id)?.nameCategory
+      return (await this.categorySVC.getCategoryById(id));
     return {};
-  }*/
+  }
 
   onUpdateClick(){
     this.onUpdate.emit(this.workout);

@@ -80,6 +80,10 @@ export class CategoryWorkoutSVCService {
       docId:category.docId,
       nameCategory:category.nameCategory
     };
+    if(category['pictureFile']){
+      var response:FileUploaded = await this.uploadImage(category['pictureFile']);
+      _category['image'] = response.file;
+    }
     try {
       await this.firebase.updateDocument('category',category.docId, _category);
     }catch(error){

@@ -22,25 +22,42 @@ export class DiaryComponent implements OnInit {
   ) { }
 
     
-  getWorkoutNameById(id:number | undefined){
+  async getWorkoutNameById(id:string | undefined){
     if(id!=null){
-      return this.workoutSVC.getWorkoutById(id)?.name;
+
+      try{
+        var result = (await this.workoutSVC.getWorkoutById(id))?.name;
+      }catch(error){
+        console.log(error);
+      }
+      return result;
     }
     return{}
     
   }
-  getWorkoutImageById(id:number | undefined){
+  async getWorkoutImageById(id:string | undefined){
     if(id!=null){
-      return this.workoutSVC.getWorkoutById(id)?.image;
+      try{
+        var result = (await this.workoutSVC.getWorkoutById(id))?.image;
+      }catch(error){
+        console.log(error);
+      }
+      return result;
     }
     return{}
     
   }
 
-  getCategoryById(id:number | undefined){
+  async getCategoryById(id:string | undefined){
     if(id!=null){
-      var idCategoria = this.workoutSVC.getWorkoutById(id)?.id_category;
-      //return this.categorySVC.getCategoryById(idCategoria!)?.nameCategory;
+      try{
+        var idCategoria = (await this.workoutSVC.getWorkoutById(id))?.id_category;
+        var result = (await this.categorySVC.getCategoryById(idCategoria!))?.nameCategory;
+
+      }catch(error){
+        console.log(error);
+      }
+      return result;
     }
     return{}
     

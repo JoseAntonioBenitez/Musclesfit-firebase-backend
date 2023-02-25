@@ -21,8 +21,8 @@ export const USER_PROFILE_VALUE_ACCESSOR: any = {
 })
 export class ExerciseSelectableComponent implements OnInit {
 
-  selectedExercise:Workout | undefined = {id:0,name:"", id_category:0,id_equipment:0,image:""};
-  propagateChange = (_: any) => { }
+  selectedExercise:Workout | undefined = {id:0,name:"", id_category:"",id_equipment:"",image:""};
+  propagateChange = ( _ : any) => { }
   isDisabled:boolean = false;
 
   constructor(
@@ -30,8 +30,12 @@ export class ExerciseSelectableComponent implements OnInit {
   ) { }
 
 
-  writeValue(obj: any): void {
-    this.selectedExercise = this.workoutSVC?.getWorkoutById(obj);
+  async writeValue(obj: any) {
+    try{
+      this.selectedExercise = await this.workoutSVC?.getWorkoutById(obj);
+    }catch (error) {
+      console.log("No se ha podido recupera los datos: "+error);
+    }
   }
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
@@ -49,7 +53,7 @@ export class ExerciseSelectableComponent implements OnInit {
     return this.workoutSVC.workout$;
   } 
 
-  onEquipmentClicked(workout:Workout, accordion:IonAccordionGroup){
+  onWorkoutClicked(workout:Workout, accordion:IonAccordionGroup){
     
     this.selectedExercise = workout;
     accordion.value='';

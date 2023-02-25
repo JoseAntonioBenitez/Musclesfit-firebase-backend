@@ -13,7 +13,6 @@ import { WorkoutSVCService } from 'src/app/core/services/workout-svc.service';
   styleUrls: ['./workout.page.scss'],
 })
 export class WorkoutPage implements OnInit {
-  public workout!:Workout[];
   constructor(
     private workoutSVC : WorkoutSVCService,
     private DiarySVC:DiarySvcService,
@@ -30,7 +29,7 @@ export class WorkoutPage implements OnInit {
   }
 
 
-  getWorkoutByCategory(id:number){
+  getWorkoutByCategory(id:string){
     return this.workoutSVC.getWorkoutByCategory(id);
   }
 
@@ -81,7 +80,7 @@ async onDeleteAlert(workout:any){
         text: await lastValueFrom(this.translate.get('general.btn_delete')),
         role: 'confirm',
         handler: () => {
-            this.workoutSVC.deleteWorkoutById(workout.id);
+            this.workoutSVC.deleteWorkout(workout);
           
         },
       },
