@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DocumentData } from '@firebase/firestore';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map, toArray } from 'rxjs';
 import { CategoryWorkout } from '../model/categoryWorkout';
 import { Equipment } from '../model/equipment';
 import { Workout } from '../model/workout';
@@ -20,7 +20,7 @@ export class WorkoutSVCService {
   constructor(
     private firebase:FirebaseService
   ) {
-      this.unsubscr = this.firebase.subscribeToCollection('workout',this._workoutSubjetc, this.mapWorkout)
+      this.unsubscr = this.firebase.subscribeToCollection('workout',this._workoutSubjetc, this.mapWorkout);
     }
 
   private mapWorkout(doc:DocumentData){
@@ -34,59 +34,34 @@ export class WorkoutSVCService {
     };
   }
 
-  getWorkoutByCategory(id:string){ //Filter by Category
-    return new Promise<CategoryWorkout>(async (resolve,reject) => {
-      try{
-        var category = (await this.firebase.getDocument('category',id));
-        resolve({
-          id:0,
-          docId:category.id,
-          nameCategory:category.data['nameCategory'],
-          image:category.data['image']
-
-        });
-      }catch(error){
-        reject(error);
-      }
-    });
+  getWorkoutByCategory(id:string):any{ //Filter by Category
+    this.workout$
+      .pipe(
+        map(workouts => workouts.filter(workout => workout.id_category === id))
+      )
+      .subscribe(filteredWorkouts => {
+        return(filteredWorkouts);
+      });
   }
 
-  getWorkoutById(id:string){
-    return new Promise<Workout>(async (resolve,reject) => {
-      try{
-        var workout = (await this.firebase.getDocument('workout',id));
-        resolve({
-          id:0,
-          docId:workout.id,
-          name:workout.data['nameCategory'],
-          id_equipment:workout.data['id_equipment'],
-          id_category:workout.data['id_category'],
-          image:workout.data['image']
-
-        });
-      }catch(error){
-        reject(error);
-      }
-    });
+  getWorkoutById(id:string):any{
+    this.workout$
+      .pipe(
+        map(workouts => workouts.filter(workout => workout.docId === id))
+      )
+      .subscribe(filteredWorkouts => {
+        return(filteredWorkouts);
+      });
   }
 
-  getWorkoutByEquipment(id:string){
-    return new Promise<Equipment>(async (resolve, reject) => {
-
-      try{
-        var equipment = (await this.firebase.getDocument('equipment',id));
-        resolve({
-          id:0,
-          docId:equipment.id,
-          name_equipment:equipment.data['name_equipment'],
-          image:equipment.data['image']
-
-        });
-      }catch(error){
-        reject(error);
-      }
-      
-    });
+  getWorkoutByEquipment(id: string):any {
+    this.workout$
+      .pipe(
+        map(workouts => workouts.filter(workout => workout.id_equipment === id))
+      )
+      .subscribe(filteredWorkouts => {
+        return(filteredWorkouts);
+      });
   }
 
   async deleteWorkout(workout:Workout){
@@ -105,8 +80,6 @@ export class WorkoutSVCService {
   }
 
   async addWorkout(workout:Workout){
-    console.log("workout id equipment:"+workout.id_equipment);
-    console.log("workout id category:"+workout.id_category);
     var _workout = {
       id:0,
       docId:workout.docId,

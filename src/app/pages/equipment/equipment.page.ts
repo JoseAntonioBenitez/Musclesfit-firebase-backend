@@ -109,12 +109,19 @@ export class EquipmentPage implements OnInit {
     const { role } = await alert.onDidDismiss();
   }
 
-  onDeleteEquipment(equipament:any){
-    if(!this.workoutSVC.getWorkoutByEquipment(equipament.id)){
-      this.onDeleteAlert(equipament);
-    }else{
-      this.onEquipmentExistsAlert(equipament);
+  async onDeleteEquipment(equipament:any){
+    try{
+      const workout = await this.workoutSVC.getWorkoutByEquipment(equipament.docId);
+      if(!workout){
+        this.onDeleteAlert(equipament);
+      }else{
+        this.onEquipmentExistsAlert(equipament);
+      }
+    }catch (error) {
+      console.error(error);
     }
+
+   
   }
 }
 

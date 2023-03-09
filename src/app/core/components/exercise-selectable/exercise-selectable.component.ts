@@ -21,7 +21,7 @@ export const USER_PROFILE_VALUE_ACCESSOR: any = {
 })
 export class ExerciseSelectableComponent implements OnInit {
 
-  selectedExercise:Workout | undefined = {id:0,name:"", id_category:"",id_equipment:"",image:""};
+  selectedExercise:Workout= null;
   propagateChange = ( _ : any) => { }
   isDisabled:boolean = false;
 
@@ -57,6 +57,6 @@ export class ExerciseSelectableComponent implements OnInit {
     
     this.selectedExercise = workout;
     accordion.value='';
-    this.propagateChange(this.selectedExercise.id);
+    this.propagateChange(this.selectedExercise.docId);
   }
 }

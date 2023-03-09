@@ -27,6 +27,8 @@ export class ExerciseFormComponent implements OnInit {
       this.form.controls['id_equipment'].setValue(workout.id_equipment);
       this.form.controls['id_category'].setValue(workout.id_category);
       this.form.controls['image'].setValue(workout.image);
+      if(workout.image)
+        this.currentImage.next(workout.image);
       this.mode = "Edit";
       
     }
@@ -38,6 +40,8 @@ export class ExerciseFormComponent implements OnInit {
     private photoSvc:PhotoService,
     private cdr: ChangeDetectorRef
     ) {
+
+     
     this.form = this.formBuilder.group({
       id:[null],
       docId:[''],

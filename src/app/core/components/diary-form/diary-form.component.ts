@@ -14,13 +14,14 @@ export class DiaryFormComponent implements OnInit {
   mode: "New" | "Edit" = "New"; 
 
   
-  @Input('diaryList') set diaryList(diaryList:diaryWorkout){
-    if(diaryList){
-      this.form.controls['id'].setValue(diaryList.id);
-      this.form.controls['idWorkout'].setValue(diaryList.idWorkout);
-      this.form.controls['dateWorkout'].setValue(diaryList.dateWorkout);
-      this.form.controls['weight'].setValue(diaryList.weight);
-      this.form.controls['reps'].setValue(diaryList.reps);
+  @Input('diary') set diary(diary:diaryWorkout){
+    if(diary){
+      this.form.controls['id'].setValue(diary.id);
+      this.form.controls['docId'].setValue(diary.docId);
+      this.form.controls['idWorkout'].setValue(diary.idWorkout);
+      this.form.controls['dateWorkout'].setValue(diary.dateWorkout);
+      this.form.controls['weight'].setValue(diary.weight);
+      this.form.controls['reps'].setValue(diary.reps);
       
       this.mode = "Edit";
       
@@ -30,8 +31,11 @@ export class DiaryFormComponent implements OnInit {
   constructor(private formBuilder:FormBuilder, 
               private modal:ModalController
     ) {
+
+      
     this.form = this.formBuilder.group({
       id:[null],
+      docId:[''],
       idWorkout:['',[Validators.required]],
       dateWorkout:['',[Validators.required]],
       weight:[''],
@@ -42,7 +46,8 @@ export class DiaryFormComponent implements OnInit {
   ngOnInit() {}
 
   onSubmit(){
-    this.modal.dismiss({diary: this.form.value, mode: this.mode}, 'ok')
+    this.modal.dismiss({diary: this.form.value, mode: this.mode}, 'ok'
+    )
   }
 
   onDismiss(){

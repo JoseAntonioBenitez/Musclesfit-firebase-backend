@@ -111,7 +111,7 @@ async onWorkoutExistsAlert(workout:any){
 }
 
   onDeleteWorkout(workout:any){
-    if(!this.DiarySVC.getDiaryByIdWorkout(workout.id)){
+    if(!this.DiarySVC.getDiaryByIdWorkout(workout.docId)){
       this.onDeleteAlert(workout);
     }else{
       this.onWorkoutExistsAlert(workout);

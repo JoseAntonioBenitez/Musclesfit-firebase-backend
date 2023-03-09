@@ -22,6 +22,7 @@ export class CategoryFormComponent implements OnInit {
   @Input('category') set category(category:CategoryWorkout){
     if(category){
       this.form.controls['id'].setValue(category.id);
+      this.form.controls['docId'].setValue(category.docId);
       this.form.controls['nameCategory'].setValue(category.nameCategory);
       this.form.controls['image'].setValue(category.image);
       if(category.image)

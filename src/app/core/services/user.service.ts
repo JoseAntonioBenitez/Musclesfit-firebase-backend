@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { async } from '@firebase/util';
-import { UserCredential } from 'firebase/auth';
 import { BehaviorSubject } from 'rxjs';
 import { User, UserLogin, UserRegister } from '../model/user';
 import { FirebaseService } from './firebase/firebase-service';

@@ -10,16 +10,23 @@ import { WorkoutSVCService } from '../../services/workout-svc.service';
   styleUrls: ['./diary.component.scss'],
 })
 export class DiaryComponent implements OnInit {
-  @Input() diary!:diaryWorkout;
+ 
   @Output() onUpdate = new EventEmitter;
   @Output() onDelete = new EventEmitter;
+  @Input() diary:diaryWorkout;
   constructor(
 
     private workoutSVC:WorkoutSVCService,
     private categorySVC:CategoryWorkoutSVCService,
     private screenSizeSVC:ScreenSizeSVCService
 
-  ) { }
+  ) { 
+    if (this.diary) {
+      console.log(this.diary.docId)
+    } else {
+      console.log('La variable diary es undefined');
+    }
+  }
 
     
   async getWorkoutNameById(id:string | undefined){

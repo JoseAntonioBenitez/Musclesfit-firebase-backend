@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, map } from 'rxjs';
 import { DiaryFormComponent } from 'src/app/core/components/diary-form/diary-form.component';
 import { diaryWorkout } from 'src/app/core/model/diaryWorkout';
 import { DiarySvcService } from 'src/app/core/services/diary-svc.service';
@@ -15,6 +15,7 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class HomePage {
 
+  
   ScreenSizeWidth:number = this.ScreenSizeSVC.getScreenSizeWidth();
 
   //Size Plataforms
@@ -31,7 +32,6 @@ export class HomePage {
     private userSVC:UserService
     ) {}
 
-
   getScreenSize(){
     this.ScreenSizeWidth = this.ScreenSizeSVC.getScreenSizeWidth()
    }
@@ -47,6 +47,7 @@ export class HomePage {
    }
 
    getDiaryList(){
+
     return this.DiarySVC.diaryList$
    }
 
@@ -54,7 +55,7 @@ export class HomePage {
     const modal = await this.modal.create({
         component:DiaryFormComponent,
         componentProps:{
-          diaryList:diary
+          diary:diary
         },
         cssClass:"modal-full-right-side"
     });
@@ -97,7 +98,7 @@ async onDeleteAlert(diary:any){
         text: await lastValueFrom(this.translate.get('general.btn_delete')),
         role: 'confirm',
         handler: () => {
-            this.DiarySVC.deleteDiaryListById(diary.id);
+            this.DiarySVC.deleteDiaryListById(diary);
           
         },
       },
