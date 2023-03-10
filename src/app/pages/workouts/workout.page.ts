@@ -1,25 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, tap } from 'rxjs';
 import { ExerciseFormComponent } from 'src/app/core/components/exercise-form/exercise-form.component';
+import { CategoryWorkout } from 'src/app/core/model/categoryWorkout';
+import { Equipment } from 'src/app/core/model/equipment';
 import { Workout } from 'src/app/core/model/workout';
+import { CategoryWorkoutSVCService } from 'src/app/core/services/category-workout-svc.service';
 import { DiarySvcService } from 'src/app/core/services/diary-svc.service';
+import { EquipamentSVCService } from 'src/app/core/services/equipament-svc.service';
 import { WorkoutSVCService } from 'src/app/core/services/workout-svc.service';
 
+
+export interface WorkoutWrapper{
+  workout:Workout,
+  equipment:Equipment,
+  category:CategoryWorkout
+}
 @Component({
   selector: 'app-workout',
   templateUrl: './workout.page.html',
   styleUrls: ['./workout.page.scss'],
 })
 export class WorkoutPage implements OnInit {
+
+  private _workouts:BehaviorSubject<WorkoutWrapper[]> = new BehaviorSubject<WorkoutWrapper[]>([]);
+  public workouts$ = this._workouts.asObservable();
   constructor(
     private workoutSVC : WorkoutSVCService,
+    private equipmentSVC : EquipamentSVCService,
+    private categorySVC : CategoryWorkoutSVCService,
     private DiarySVC:DiarySvcService,
     private modal:ModalController,
     private alert:AlertController,
     private translate : TranslateService
-  ) { }
+  ) { 
+    this.workoutSVC.workout$.subscribe(async workouts=>{
+
+      var _workouts:WorkoutWrapper[] = await Promise.all( workouts.map( async workout=>{
+        return {
+          workout:workout,
+          equipment:await this.equipmentSVC.getEquipmentById(workout.id_equipment),
+          category:await this.categorySVC.getCategoryById(workout.id_category)
+        }
+      
+      }));
+      this._workouts.next(_workouts);
+    });
+  }
 
   ngOnInit() {
   }
@@ -30,7 +58,11 @@ export class WorkoutPage implements OnInit {
 
 
   getWorkoutByCategory(id:string){
-    return this.workoutSVC.getWorkoutByCategory(id);
+    return  this.workoutSVC.getWorkoutByCategory(id);
+  }
+
+  async getEquipmentId(id:string){
+    return await this.equipmentSVC.getEquipmentById(id);
   }
 
   async workoutForm (exercise:Workout|null|undefined){
@@ -110,11 +142,11 @@ async onWorkoutExistsAlert(workout:any){
   const { role } = await alert.onDidDismiss();
 }
 
-  onDeleteWorkout(workout:any){
-    if(!this.DiarySVC.getDiaryByIdWorkout(workout.docId)){
-      this.onDeleteAlert(workout);
-    }else{
+  async onDeleteWorkout(workout:any){
+    this.DiarySVC.getDiaryByIdWorkout(workout.docId).then(diary=>{
       this.onWorkoutExistsAlert(workout);
-    }
+    }).catch(error=>{
+      this.onDeleteAlert(workout);
+    });
   }
 }

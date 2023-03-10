@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DocumentData } from 'firebase/firestore';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { Equipment } from '../model/equipment';
 import { FileUploaded, FirebaseService } from './firebase/firebase-service';
 import { UserService } from './user.service';
@@ -34,11 +34,22 @@ export class EquipamentSVCService {
     };
   }
 
-  getEquipmentById(id:string):any{
-    return this.equipment$
-      .pipe(
-        map(equipments => equipments.find(equipment => equipment.docId === id))
-      );
+  getEquipmentById(id:string):Promise<Equipment | undefined>{
+    return new Promise<Equipment>(async (resolve,reject) => {
+      try{
+        var equipment = (await this.firebase.getDocument('equipment',id));
+        resolve({
+          id:0,
+          docId:equipment.id,
+          name_equipment:equipment.data['name_equipment'],
+          image:equipment.data['image']
+
+        });
+      }catch(error){
+        reject(error);
+      }
+    });
+    
   }
 
   async deleteEquipment(equipament:Equipment){

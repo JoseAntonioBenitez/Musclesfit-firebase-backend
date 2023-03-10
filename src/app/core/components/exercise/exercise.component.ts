@@ -14,30 +14,47 @@ import { EquipamentSVCService } from '../../services/equipament-svc.service';
 export class ExerciseComponent implements OnInit {
 
 
-  @Input() workout!:Workout;
-  @Output() onUpdate = new EventEmitter;
-  @Output() onDelete = new EventEmitter;
+  private _workout:Workout;
+
+  @Input('workout') set workout(w:Workout){
+    this._workout = w;
+  }
+
+  get workout():Workout{
+    return this._workout;
+  }
+
+  private _equipment:Equipment;
+  @Input('equipment') set equipment(e:Equipment){
+    this._equipment = e;
+
+  }
+
+  get equipment():Equipment{
+    return this._equipment;
+  }
+
+  private _category:CategoryWorkout;
+  @Input('category') set category(c:CategoryWorkout){
+    this._category = c;
+
+  }
+
+  get category():CategoryWorkout{
+    return this._category;
+  }
+
+  @Output() onUpdate = new EventEmitter<Workout>();
+  @Output() onDelete = new EventEmitter<Workout>();
 
 
-  private _equipment:BehaviorSubject<Equipment> = new BehaviorSubject<Equipment>(null);
-  private _category:BehaviorSubject<CategoryWorkout> = new BehaviorSubject<CategoryWorkout>(null);
-  equipment$:Observable<Equipment> = this._equipment.asObservable();
-  category$:Observable<CategoryWorkout> = this._category.asObservable();
 
   constructor(
-    private equipmentSVC : EquipamentSVCService,
-    private categorySVC : CategoryWorkoutSVCService
   ) { 
 
-    this.loadEquipmetsAndCategories();
   }
   ngOnInit() {
     
-  }
-
-  async loadEquipmetsAndCategories() {
-    this._equipment.next(await this.equipmentSVC.getEquipmentById(this.workout.id_equipment));
-    this._category.next(await this.categorySVC.getCategoryById(this.workout.id_category));
   }
 
 
