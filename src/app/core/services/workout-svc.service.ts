@@ -45,13 +45,21 @@ export class WorkoutSVCService {
   }
 
   getWorkoutById(id:string):any{
-    this.workout$
-      .pipe(
-        map(workouts => workouts.filter(workout => workout.docId === id))
-      )
-      .subscribe(filteredWorkouts => {
-        return(filteredWorkouts);
-      });
+    return new Promise<Workout>(async (resolve,reject) => {
+      try{
+        var workout = (await this.firebase.getDocument('workout',id));
+        resolve({
+          id:0,
+          docId:workout.data['docId'],
+          name:workout.data['name'],
+          id_equipment:workout.data['id_equipment'],
+          id_category:workout.data['id_category'],
+          image:workout.data['image']
+        });
+      }catch(error){
+        reject(error);
+      }
+    });
   }
 
   getWorkoutByEquipment(id: string):any {

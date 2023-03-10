@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { diaryWorkout } from '../../model/diaryWorkout';
+import { Workout } from '../../model/workout';
 import { CategoryWorkoutSVCService } from '../../services/category-workout-svc.service';
 import { ScreenSizeSVCService } from '../../services/screen-size-svc.service';
 import { WorkoutSVCService } from '../../services/workout-svc.service';
@@ -13,62 +14,32 @@ export class DiaryComponent implements OnInit {
  
   @Output() onUpdate = new EventEmitter;
   @Output() onDelete = new EventEmitter;
-  @Input() diary:diaryWorkout;
-  constructor(
 
-    private workoutSVC:WorkoutSVCService,
-    private categorySVC:CategoryWorkoutSVCService,
+
+
+  private _diary:diaryWorkout;
+  @Input('diary') set diary(d:diaryWorkout){
+    this._diary = d;
+  }
+
+  
+  get diary() : diaryWorkout {
+    return this._diary;
+  }
+  
+
+  private _workout:Workout;
+  @Input('workout') set workout(w:Workout){
+    this._workout = w;
+  }
+
+  get workout():Workout{
+    return this._workout;
+  }
+  constructor(
     private screenSizeSVC:ScreenSizeSVCService
 
-  ) { 
-    if (this.diary) {
-      console.log(this.diary.docId)
-    } else {
-      console.log('La variable diary es undefined');
-    }
-  }
-
-    
-  async getWorkoutNameById(id:string | undefined){
-    if(id!=null){
-
-      try{
-        var result = (await this.workoutSVC.getWorkoutById(id))?.name;
-      }catch(error){
-        console.log(error);
-      }
-      return result;
-    }
-    return{}
-    
-  }
-  async getWorkoutImageById(id:string | undefined){
-    if(id!=null){
-      try{
-        var result = (await this.workoutSVC.getWorkoutById(id))?.image;
-      }catch(error){
-        console.log(error);
-      }
-      return result;
-    }
-    return{}
-    
-  }
-
-  async getCategoryById(id:string | undefined){
-    if(id!=null){
-      try{
-        var idCategoria = (await this.workoutSVC.getWorkoutById(id))?.id_category;
-        var result = (await this.categorySVC.getCategoryById(idCategoria!))?.nameCategory;
-
-      }catch(error){
-        console.log(error);
-      }
-      return result;
-    }
-    return{}
-    
-  }
+  ) {}
 
   //Size Plataforms
   PhoneWidth:number = 500;

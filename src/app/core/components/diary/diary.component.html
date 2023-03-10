@@ -1,20 +1,17 @@
 <ion-card>
-  <p>funciona</p>
-  <!--
   <ion-card-header>
     <ion-card-title>{{diary.dateWorkout | date: 'short'}}</ion-card-title>
-    <ion-card-subtitle>{{getCategoryById(diary.idWorkout)}}</ion-card-subtitle>
+    <!--<ion-card-subtitle>{{getCategoryById(diary.idWorkout)}}</ion-card-subtitle>-->
   </ion-card-header>
 
   <ion-card-content>
     <ion-item>
-      <p>existo</p>
       <ng-container *ngIf="screenType()=='BIG'">
         <ion-avatar>
-          <ion-img src="{{getWorkoutImageById(diary.idWorkout)}}"></ion-img>
+          <ion-img src="{{workout?.image}}"></ion-img>
         </ion-avatar>
         <ion-text id="WorkoutName">
-          {{'diary.lblWorkout' | translate}}: {{getWorkoutNameById(diary.idWorkout)}}
+          {{'diary.lblWorkout' | translate}}: {{workout?.name}}
         </ion-text>
         
         <ion-text id="WorkoutRep">
@@ -30,11 +27,11 @@
         <ion-grid>
           <ion-row class="ion-align-items-center">
             <ion-col size="12" class="ion-align-self-center">
-              <ion-img src="{{getWorkoutImageById(diary.idWorkout)}}"></ion-img>
+              <ion-img src="{{workout?.image}}"></ion-img>
             </ion-col>
             <ion-col size="12" class="ion-align-self-center">
               <ion-text id="WorkoutName">
-                {{'diary.lblWorkout' | translate}}: {{getWorkoutNameById(diary.idWorkout)}}
+                {{'diary.lblWorkout' | translate}}: {{workout?.name}}
               </ion-text>
             </ion-col>
             <ion-col size="9" class="ion-align-self-center">
@@ -55,5 +52,4 @@
 
   <ion-button color="tertiary" (click)="onUpdateClick()"><ion-icon name="create-outline"></ion-icon></ion-button>
   <ion-button color="danger" (click)="onDeleteClick()"><ion-icon name="trash-outline"></ion-icon></ion-button>
-  -->
 </ion-card>

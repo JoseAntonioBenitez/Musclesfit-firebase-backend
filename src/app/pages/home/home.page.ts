@@ -1,12 +1,21 @@
 import { Component } from '@angular/core';
+import { async } from '@firebase/util';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom, map } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, map } from 'rxjs';
 import { DiaryFormComponent } from 'src/app/core/components/diary-form/diary-form.component';
 import { diaryWorkout } from 'src/app/core/model/diaryWorkout';
+import { Workout } from 'src/app/core/model/workout';
 import { DiarySvcService } from 'src/app/core/services/diary-svc.service';
 import { ScreenSizeSVCService } from 'src/app/core/services/screen-size-svc.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { WorkoutSVCService } from 'src/app/core/services/workout-svc.service';
+
+
+export interface diaryWrapper{
+  diary:diaryWorkout,
+  workout:Workout
+}
 
 @Component({
   selector: 'app-home',
@@ -15,7 +24,9 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class HomePage {
 
-  
+  private _diaries:BehaviorSubject<diaryWrapper[]> = new BehaviorSubject<diaryWrapper[]>([]);
+  public diaries$ = this._diaries.asObservable();
+
   ScreenSizeWidth:number = this.ScreenSizeSVC.getScreenSizeWidth();
 
   //Size Plataforms
@@ -26,17 +37,36 @@ export class HomePage {
   constructor(
     private ScreenSizeSVC:ScreenSizeSVCService,    
     private DiarySVC:DiarySvcService,
+    private workoutSVC:WorkoutSVCService,
     private modal:ModalController,
     private alert:AlertController,
     private translate:TranslateService,
     private userSVC:UserService
-    ) {}
+  ){
+    this.DiarySVC.diaryList$.subscribe(async diaries => {
+
+      var _diaries:diaryWrapper[] = await Promise.all(diaries.map ( async diary =>{
+        console.log(await this.workoutSVC.getWorkoutById(diary.idWorkout));
+          return {
+              diary:diary,
+              
+              workout: await this.workoutSVC.getWorkoutById(diary.idWorkout)
+          }
+      }));
+      this._diaries.next(_diaries);
+    });
+  }
+
+
+  getDiaryList(){
+    return this.DiarySVC.diaryList$
+  }  
 
   getScreenSize(){
     this.ScreenSizeWidth = this.ScreenSizeSVC.getScreenSizeWidth()
-   }
+  }
 
-   screenType():'BIG'|'SMALL'{
+  screenType():'BIG'|'SMALL'{
       if (this.ScreenSizeWidth <= this.PhoneWidth){
         return 'SMALL'
       }else if (this.ScreenSizeWidth > this.TabletWidth && this.ScreenSizeWidth < this.MonitorWidth ){
@@ -44,12 +74,7 @@ export class HomePage {
       }else{
         return 'BIG';
       }
-   }
-
-   getDiaryList(){
-
-    return this.DiarySVC.diaryList$
-   }
+  }
 
    async DiaryListForm (diary:diaryWorkout|null|undefined){
     const modal = await this.modal.create({
